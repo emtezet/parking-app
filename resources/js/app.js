@@ -4,8 +4,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import LoginPage from "./components/LoginPage";
-
 require('./bootstrap');
 
 //window.Vue = require('vue');
@@ -32,10 +30,16 @@ require('./bootstrap');
 
 import Vue from 'vue'
 import VueRouter from "vue-router";
+import Vuex from 'vuex';
+import axios from 'axios';
 
 Vue.use(VueRouter);
+Vue.use(Vuex);
+
+axios.defaults.baseURL = 'http://parking.localhost/api';
 
 import App from './components/App'
+import LoginPage from './components/LoginPage'
 
 const router = new VueRouter({
     mode: 'history',
@@ -44,12 +48,83 @@ const router = new VueRouter({
             name: 'login',
             path: '/login',
             component: LoginPage,
+        },
+        {
+            name: 'homepage',
+            path: '/',
         }
     ],
 });
 
+const store = new Vuex.Store({
+    state: {
+        user: null
+    },
+
+    mutations: {
+        setUserData (state, userData) {
+            state.user = userData
+            localStorage.setItem('user', JSON.stringify(userData))
+            axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`
+        },
+
+        clearUserData () {
+            localStorage.removeItem('user')
+            location.reload()
+        }
+    },
+
+    actions: {
+        login ({ commit }, credentials) {
+            return axios
+                .post('/login', credentials)
+                .then(({ data }) => {
+                    commit('setUserData', data)
+                })
+        },
+
+        logout ({ commit }) {
+            commit('clearUserData')
+        }
+    },
+
+    getters : {
+        isLogged: state => !!state.user
+    }
+})
+
+router.beforeEach((to, from, next) => {
+    const loggedIn = localStorage.getItem('user')
+
+    if (to.matched.some(record => record.meta.auth) && !loggedIn) {
+        next('/login')
+        return
+    }
+    next()
+})
+
+Vue.config.productionTip = false;
+
 const app = new Vue({
     el: '#app',
+    mode: 'history',
     components: {App},
-    router
+    router,
+    store,
+    created () {
+        const userInfo = localStorage.getItem('user')
+        if (userInfo) {
+            const userData = JSON.parse(userInfo)
+            this.$store.commit('setUserData', userData)
+        }
+        axios.interceptors.response.use(
+            response => response,
+            error => {
+                if (error.response.status === 401) {
+                    this.$store.dispatch('logout')
+                }
+                return Promise.reject(error)
+            }
+        )
+    },
 });
