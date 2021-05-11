@@ -4,9 +4,11 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import LoginPage from "./components/LoginPage";
+
 require('./bootstrap');
 
-window.Vue = require('vue');
+//window.Vue = require('vue');
 
 /**
  * The following block of code may be used to automatically register your
@@ -19,8 +21,8 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('navbar-component', require('./components/Navbar').default);
+//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+//Vue.component('navbar-component', require('./components/Navbar').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -28,6 +30,26 @@ Vue.component('navbar-component', require('./components/Navbar').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import Vue from 'vue'
+import VueRouter from "vue-router";
+
+Vue.use(VueRouter);
+
+import App from './components/App'
+
+const router = new VueRouter({
+    mode: 'history',
+    routes: [
+        {
+            name: 'login',
+            path: '/login',
+            component: LoginPage,
+        }
+    ],
+});
+
 const app = new Vue({
     el: '#app',
+    components: {App},
+    router
 });

@@ -22,11 +22,10 @@
 </head>
 <body>
     <div id="app">
-        <navbar-component></navbar-component>
+        <div class="container-fluid">
+            <app :app_name="'{{ config('app.name', 'Laravel') }}'"></app>
+        </div>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
     </div>
 </body>
 </html>
