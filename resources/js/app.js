@@ -85,7 +85,7 @@ const store = new Vuex.Store({
 
         clearUserData () {
             localStorage.removeItem('user')
-            location.replace('/');
+            location.reload()
         }
     },
 
