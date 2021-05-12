@@ -16,6 +16,22 @@
             </div>
         </nav>
 
+        <div class="links bg-warning p-1" v-if="user_role === ''">
+            <router-link :to="{ name: 'login' }" class="nav-link text-dark">Podgląd miejsc parkingowych</router-link>
+        </div>
+
+        <div class="links bg-warning p-1" v-if="user_role === 'insert'">
+            <router-link :to="{ name: 'login' }" class="text-dark">Pojazdy</router-link>
+            <router-link :to="{ name: 'login' }" class="text-dark">Parkowania</router-link>
+        </div>
+
+        <div class="links bg-warning p-1" v-if="user_role === 'admin'">
+            <router-link :to="{ name: 'login' }" class="text-dark">Użytkownicy</router-link>
+            <router-link :to="{ name: 'login' }" class="text-dark">Parkingi</router-link>
+            <router-link :to="{ name: 'login' }" class="text-dark">Cenniki</router-link>
+            <router-link :to="{ name: 'login' }" class="text-dark">Raporty</router-link>
+        </div>
+
         <router-view></router-view>
     </div>
 </template>
@@ -31,7 +47,8 @@ export default {
     ],
     data() {
         return {
-            username: ''
+            username: '',
+            user_role: ''
         }
     },
     created() {
@@ -46,6 +63,7 @@ export default {
             const userData = JSON.parse(localStorage.getItem('user'));
             this.$store.commit('setUserData', userData)
             this.username = userData.user.name
+            this.user_role = userData.user.role
         }
     },
     computed: {
@@ -62,11 +80,21 @@ export default {
         if (localStorage.getItem('user')) {
             const userData = JSON.parse(localStorage.getItem('user'));
             this.username = userData.user.name
+            this.user_role = userData.user.role
         }
     }
 }
 </script>
 
 <style scoped>
+    .links > a {
+        color: #636b6f;
+        padding: 0 25px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .1rem;
+        text-decoration: none;
+        text-transform: uppercase;
+    }
 
 </style>
