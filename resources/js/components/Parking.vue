@@ -32,7 +32,7 @@
 
                 <button @click="editParking(parking)" class="btn btn-warning mb-2" v-if="user_role === 'admin'">Edytuj</button>
                 <button @click="deleteParking(parking.id)" class="btn btn-danger" v-if="user_role === 'admin'">Usuń</button>
-                <button @click="makeReservation(parking.id)" class="btn btn-info text-white" v-if="user_role === ''">Zatrezerwuj</button>
+                <button @click="makeReservation(parking.id)" class="btn btn-info text-white" v-if="user_role === '' && parking.free_places > 0">Zatrezerwuj</button>
             </div>
         </div>
 
