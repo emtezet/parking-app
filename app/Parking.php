@@ -17,4 +17,12 @@ class Parking extends Model
     public function prices() {
         return $this->hasMany(PriceList::class);
     }
+
+    public function activeRents() {
+        return $this->hasMany(Rent::class)->where('price', '=', null);
+    }
+
+    public function activeReservations() {
+        return $this->hasMany(Reservation::class)->where('valid_to', '>', new \DateTime('now'));
+    }
 }

@@ -1,7 +1,7 @@
 <template>
 
     <div>
-        <p class="h3">Strona logowania</p>
+        <p class="h3 mt-3 border-bottom">Strona logowania</p>
         <div class="col-12 col-md-6 pl-0">
             <form @submit.prevent="login" class="form">
                 <div class="form-group">

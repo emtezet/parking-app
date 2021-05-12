@@ -16,8 +16,14 @@ class CreateRentsTable extends Migration
             $table->id();
             $table->dateTime('start_time');
             $table->dateTime('end_time')->nullable(true);
-            $table->foreignId('vehicle_id')->constrained('vehicles');
-            $table->foreignId('parking_id')->constrained('parkings');
+            $table->foreignId('vehicle_id')
+                ->constrained('vehicles')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreignId('parking_id')
+                ->constrained('parkings')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->decimal('price', 7, 2, true)->nullable(true);
             $table->timestamps();
         });

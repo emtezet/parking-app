@@ -4,6 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import Parking from "./components/Parking";
+
 require('./bootstrap');
 
 //window.Vue = require('vue');
@@ -52,7 +54,13 @@ const router = new VueRouter({
         {
             name: 'homepage',
             path: '/',
-        }
+        },
+        //Parking
+        {
+            name: 'parking',
+            path: '/parking',
+            component: Parking,
+        },
     ],
 });
 

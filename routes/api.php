@@ -43,3 +43,19 @@ Route::post('/login', function (Request $request) {
 
     return response($response, 201);
 });
+
+//////////////////////
+//Parking Controller//
+//////////////////////
+
+//List of parkings with free places
+Route::get('/parkings', 'ParkingController@index');
+
+//Create new parking
+Route::post('/parking', 'ParkingController@store');
+
+//Update parking
+Route::put('/parking', 'ParkingController@store');
+
+//Delete parking
+Route::delete('/parking/{id}', 'ParkingController@destroy');

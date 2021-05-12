@@ -14,7 +14,10 @@ class CreateReservationsTable extends Migration
     public function up() {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parking_id')->constrained('parkings');
+            $table->foreignId('parking_id')
+                ->constrained('parkings')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('registration_number');
             $table->dateTime('valid_to');
             $table->timestamps();

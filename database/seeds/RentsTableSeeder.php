@@ -50,8 +50,8 @@ class RentsTableSeeder extends Seeder
 
         for ($i = 1; $i <= 50; $i++) {
 
-            $startTime = $this->faker->dateTimeBetween('-30 days', '-1 day', 'Europe/Warsaw');
-            $endTime = $this->faker->dateTimeBetween($startTime->format('Y-m-d H:i:s'), '-1 day', 'Europe/Warsaw');
+            $startTime = $this->faker->dateTimeBetween('-30 days', '-1 day');
+            $endTime = $this->faker->dateTimeBetween($startTime->format('Y-m-d H:i:s'), '-1 day');
 
             $datesDiff = sprintf("%.2f", ($endTime->getTimestamp() - $startTime->getTimestamp()) / 3600);
 

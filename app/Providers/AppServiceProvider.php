@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -15,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register() {
         Schema::defaultStringLength(191);
+        //ResourceCollection::withoutWrapping();
     }
 
     /**

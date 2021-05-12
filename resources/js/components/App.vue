@@ -2,22 +2,22 @@
     <div class="col-12">
         <p class="h1 text-center">{{ app_name }}</p>
 
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-success text-right">
-            <div class="container ">
-                <ul class="navbar-nav align-middle" v-if="isLogged === true">
-                    Witaj {{ username }}
+        <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-success ">
+            <div class="container w-100 text-right">
+                <ul class="align-middle w-100 text-right text-white mb-0" v-if="isLogged === true">
+                    Witaj, {{ username }}
                     &nbsp;
-                    <button class="btn btn-danger btn-sm" @click="logout()">Wyloguj</button>
+                    <button class="btn btn-danger btn-sm d-inline-block" @click="logout()">Wyloguj</button>
 
                 </ul>
-                <ul class="navbar-nav" v-if="isLogged === false">
-                    <router-link v-if="isLogged === false" :to="{ name: 'login' }" class="nav-link text-white">Zaloguj</router-link>
+                <ul class="w-100 text-right mb-0" v-if="isLogged === false">
+                    <router-link v-if="isLogged === false" :to="{ name: 'login' }" class="text-white">Zaloguj</router-link>
                 </ul>
             </div>
         </nav>
 
         <div class="links bg-warning p-1" v-if="user_role === ''">
-            <router-link :to="{ name: 'login' }" class="nav-link text-dark">Podgląd miejsc parkingowych</router-link>
+            <router-link :to="{ name: 'parking' }" class="nav-link text-dark">Podgląd miejsc parkingowych</router-link>
         </div>
 
         <div class="links bg-warning p-1" v-if="user_role === 'insert'">
@@ -27,12 +27,12 @@
 
         <div class="links bg-warning p-1" v-if="user_role === 'admin'">
             <router-link :to="{ name: 'login' }" class="text-dark">Użytkownicy</router-link>
-            <router-link :to="{ name: 'login' }" class="text-dark">Parkingi</router-link>
+            <router-link :to="{ name: 'parking' }" class="text-dark">Parkingi</router-link>
             <router-link :to="{ name: 'login' }" class="text-dark">Cenniki</router-link>
             <router-link :to="{ name: 'login' }" class="text-dark">Raporty</router-link>
         </div>
 
-        <router-view></router-view>
+        <router-view :user_role="user_role"></router-view>
     </div>
 </template>
 
