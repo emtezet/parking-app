@@ -45,6 +45,7 @@ import LoginPage from './components/LoginPage'
 import VehicleType from "./components/VehicleType";
 import Reservation from "./components/Reservation";
 import Vehicle from "./components/Vehicle";
+import PriceList from "./components/PriceList";
 
 const router = new VueRouter({
     mode: 'history',
@@ -81,6 +82,12 @@ const router = new VueRouter({
             name: 'vehicle',
             path: '/vehicle',
             component: Vehicle,
+        },
+        //Vehicle
+        {
+            name: 'price_list',
+            path: '/price_list',
+            component: PriceList,
         },
     ],
 });

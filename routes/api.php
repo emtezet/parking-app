@@ -107,3 +107,19 @@ Route::put('/vehicle', 'VehicleController@store');
 
 //Delete
 Route::delete('/vehicle/{id}', 'VehicleController@destroy');
+
+/////////////////////////
+//Price List Controller//
+/////////////////////////
+
+//List
+Route::get('/price_lists', 'PriceListController@index');
+
+//Create
+Route::post('/price_list', 'PriceListController@store');
+
+//Update
+Route::put('/price_list', 'PriceListController@store');
+
+//Delete
+Route::delete('/price_list/{id}', 'PriceListController@destroy');

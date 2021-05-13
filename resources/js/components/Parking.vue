@@ -30,9 +30,9 @@
                 {{ parking.free_places }}/{{ parking.places_amount }} wolnych miejsc
 
 
-                <button @click="editParking(parking)" class="btn btn-warning mb-2" v-if="user_role === 'admin'">Edytuj
+                <button @click="editParking(parking)" class="btn btn-warning btn-sm mb-2" v-if="user_role === 'admin'">Edytuj
                 </button>
-                <button @click="deleteParking(parking.id)" class="btn btn-danger" v-if="user_role === 'admin'">Usuń
+                <button @click="deleteParking(parking.id)" class="btn btn-danger btn-sm" v-if="user_role === 'admin'">Usuń
                 </button>
                 <button @click="makeReservation(parking.id)" class="btn btn-info text-white"
                         v-if="user_role === '' && parking.free_places > 0">Zarezerwuj

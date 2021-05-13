@@ -31,7 +31,7 @@
             <router-link :to="{ name: 'parking' }" class="text-dark">Parkingi</router-link>
             <router-link :to="{ name: 'vehicle_type' }" class="text-dark">Rodzaje pojazdów</router-link>
             <router-link :to="{ name: 'vehicle' }" class="text-dark">Pojazdy</router-link>
-            <router-link :to="{ name: 'login' }" class="text-dark">Cenniki</router-link>
+            <router-link :to="{ name: 'price_list' }" class="text-dark">Cenniki</router-link>
             <router-link :to="{ name: 'login' }" class="text-dark">Raporty</router-link>
         </div>
 
