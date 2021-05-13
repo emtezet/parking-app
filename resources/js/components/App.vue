@@ -21,15 +21,16 @@
         </div>
 
         <div class="links bg-warning p-1" v-if="user_role === 'insert'">
-            <router-link :to="{ name: 'login' }" class="text-dark">Pojazdy</router-link>
+            <router-link :to="{ name: 'vehicle' }" class="text-dark">Pojazdy</router-link>
             <router-link :to="{ name: 'reservation' }" class="text-dark">Rezerwacje</router-link>
-            <router-link :to="{ name: 'login' }" class="text-dark">Parkowania</router-link>
+            <router-link :to="{ name: 'rent' }" class="text-dark">Parkowania</router-link>
         </div>
 
         <div class="links bg-warning p-1" v-if="user_role === 'admin'">
             <router-link :to="{ name: 'login' }" class="text-dark">Użytkownicy</router-link>
             <router-link :to="{ name: 'parking' }" class="text-dark">Parkingi</router-link>
             <router-link :to="{ name: 'vehicle_type' }" class="text-dark">Rodzaje pojazdów</router-link>
+            <router-link :to="{ name: 'vehicle' }" class="text-dark">Pojazdy</router-link>
             <router-link :to="{ name: 'login' }" class="text-dark">Cenniki</router-link>
             <router-link :to="{ name: 'login' }" class="text-dark">Raporty</router-link>
         </div>

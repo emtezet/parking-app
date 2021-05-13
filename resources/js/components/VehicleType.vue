@@ -4,7 +4,7 @@
             <p class="h3 mt-3 border-bottom">Typy pojazdów</p>
         </div>
 
-        <div class="col-12 col-md-7" v-if="user_role === 'admin'">
+        <div class="col-12 col-md-9" v-if="user_role === 'admin'">
             <p class="mt-3 h5">Dodawanie/edycja typu pojazdu</p>
             <form @submit.prevent="addVehicleType" class="mb-3">
                 <div class="form-group">
@@ -16,12 +16,12 @@
         </div>
 
 
-        <div class="small col-12 col-md-6 mb-2" v-for="vehicle_type in vehicle_types" v-bind:key="vehicle_type.id">
+        <div class="small col-12 col-md-4 mb-2" v-for="vehicle_type in vehicle_types" v-bind:key="vehicle_type.id">
             <div class="card card-body">
                 <h3>{{ vehicle_type.name }}</h3>
                 <hr>
-                <button @click="editVehicleType(vehicle_type)" class="btn btn-warning mb-2" v-if="user_role === 'admin'">Edytuj</button>
-                <button @click="deleteVehicleType(vehicle_type.id)" class="btn btn-danger" v-if="user_role === 'admin'">Usuń</button>
+                <button @click="editVehicleType(vehicle_type)" class="btn btn-warning btn-sm mb-2" v-if="user_role === 'admin'">Edytuj</button>
+                <button @click="deleteVehicleType(vehicle_type.id)" class="btn btn-danger btn-sm" v-if="user_role === 'admin'">Usuń</button>
             </div>
         </div>
 

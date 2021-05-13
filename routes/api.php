@@ -60,9 +60,9 @@ Route::put('/parking', 'ParkingController@store');
 //Delete parking
 Route::delete('/parking/{id}', 'ParkingController@destroy');
 
-//////////////////////
+//////////////////////////
 //VehicleType Controller//
-//////////////////////
+//////////////////////////
 
 //List
 Route::get('/vehicle_types', 'VehicleTypeController@index');
@@ -76,9 +76,9 @@ Route::put('/vehicle_type', 'VehicleTypeController@store');
 //Delete
 Route::delete('/vehicle_type/{id}', 'VehicleTypeController@destroy');
 
-//////////////////////
+//////////////////////////
 //Reservation Controller//
-//////////////////////
+//////////////////////////
 
 //List
 Route::get('/reservations', 'ReservationController@index');
@@ -91,3 +91,19 @@ Route::put('/reservation', 'ReservationController@store');
 
 //Delete
 Route::delete('/reservation/{id}', 'ReservationController@destroy');
+
+//////////////////////
+//Vehicle Controller//
+//////////////////////
+
+//List
+Route::get('/vehicles', 'VehicleController@index');
+
+//Create
+Route::post('/vehicle', 'VehicleController@store');
+
+//Update
+Route::put('/vehicle', 'VehicleController@store');
+
+//Delete
+Route::delete('/vehicle/{id}', 'VehicleController@destroy');

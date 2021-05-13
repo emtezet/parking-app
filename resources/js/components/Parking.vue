@@ -4,7 +4,7 @@
             <p class="h3 mt-3 border-bottom">Parkingi</p>
         </div>
 
-        <div class="col-12 col-md-7" v-if="user_role === 'admin'">
+        <div class="col-12 col-md-9" v-if="user_role === 'admin'">
             <p class="mt-3 h5">Dodawanie/edycja parkingu</p>
             <form @submit.prevent="addParking" class="mb-3">
                 <div class="form-group">
@@ -22,7 +22,7 @@
         </div>
 
 
-        <div class="small col-12 col-md-6 mb-2" v-for="parking in parkings" v-bind:key="parking.id">
+        <div class="small col-12 col-md-4 mb-2" v-for="parking in parkings" v-bind:key="parking.id">
             <div class="card card-body">
                 <h3>{{ parking.name }}</h3>
                 <p class="mb-0">{{ parking.address }}</p>
