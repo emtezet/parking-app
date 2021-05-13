@@ -2,7 +2,7 @@
     <div class="col-12">
         <p class="h1 text-center">{{ app_name }}</p>
 
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-success ">
+        <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-success mb-1">
             <div class="container w-100 text-right">
                 <ul class="align-middle w-100 text-right text-white mb-0" v-if="isLogged === true">
                     Witaj, {{ username }}
@@ -22,6 +22,7 @@
 
         <div class="links bg-warning p-1" v-if="user_role === 'insert'">
             <router-link :to="{ name: 'login' }" class="text-dark">Pojazdy</router-link>
+            <router-link :to="{ name: 'reservation' }" class="text-dark">Rezerwacje</router-link>
             <router-link :to="{ name: 'login' }" class="text-dark">Parkowania</router-link>
         </div>
 

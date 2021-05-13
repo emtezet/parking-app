@@ -23,6 +23,6 @@ class Parking extends Model
     }
 
     public function activeReservations() {
-        return $this->hasMany(Reservation::class)->where('valid_to', '>', new \DateTime('now'));
+        return $this->hasMany(Reservation::class)->where('valid_to', '>', new \DateTime('now',  new \DateTimeZone('Europe/Warsaw')));
     }
 }

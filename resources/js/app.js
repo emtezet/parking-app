@@ -43,6 +43,7 @@ axios.defaults.baseURL = 'http://parking.localhost/api';
 import App from './components/App'
 import LoginPage from './components/LoginPage'
 import VehicleType from "./components/VehicleType";
+import Reservation from "./components/Reservation";
 
 const router = new VueRouter({
     mode: 'history',
@@ -67,6 +68,12 @@ const router = new VueRouter({
             name: 'vehicle_type',
             path: '/vehicle_type',
             component: VehicleType,
+        },
+        //Reservation
+        {
+            name: 'reservation',
+            path: '/reservation',
+            component: Reservation,
         },
     ],
 });

@@ -27,12 +27,16 @@
                 <h3>{{ parking.name }}</h3>
                 <p class="mb-0">{{ parking.address }}</p>
                 <hr>
-                {{ parking.free_places}}/{{ parking.places_amount }} wolnych miejsc
+                {{ parking.free_places }}/{{ parking.places_amount }} wolnych miejsc
 
 
-                <button @click="editParking(parking)" class="btn btn-warning mb-2" v-if="user_role === 'admin'">Edytuj</button>
-                <button @click="deleteParking(parking.id)" class="btn btn-danger" v-if="user_role === 'admin'">Usuń</button>
-                <button @click="makeReservation(parking.id)" class="btn btn-info text-white" v-if="user_role === '' && parking.free_places > 0">Zatrezerwuj</button>
+                <button @click="editParking(parking)" class="btn btn-warning mb-2" v-if="user_role === 'admin'">Edytuj
+                </button>
+                <button @click="deleteParking(parking.id)" class="btn btn-danger" v-if="user_role === 'admin'">Usuń
+                </button>
+                <button @click="makeReservation(parking.id)" class="btn btn-info text-white"
+                        v-if="user_role === '' && parking.free_places > 0">Zarezerwuj
+                </button>
             </div>
         </div>
 
@@ -46,7 +50,7 @@ import {mapGetters} from "vuex";
 export default {
     name: "Parking",
     props: [
-      'user_role'
+        'user_role'
     ],
     data() {
         return {
@@ -58,6 +62,12 @@ export default {
                 places_amount: '',
                 free_places: ''
             },
+            // reservation: {
+            //     id: '',
+            //     parking_id: '',
+            //     registration_number: '',
+            //     valid_to: ''
+            // },
             parking_id: '',
             edit: false
         };
@@ -89,6 +99,27 @@ export default {
                     })
                     .catch(err => console.log(err));
             }
+        },
+        makeReservation(parking_id) {
+            let registrationNumber = prompt('Podaj tablicę rejestracyjną:');
+
+            fetch('api/reservation', {
+                method: 'post',
+                body: JSON.stringify({
+                    parking_id: parking_id,
+                    registration_number: registrationNumber
+                }),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert('Rezerwacja przyjęta! Ważna do: ' + data);
+                    this.fetchParkings();
+                })
+                .catch(err => console.log(err));
+
         },
         editParking(parking) {
             this.edit = true;
