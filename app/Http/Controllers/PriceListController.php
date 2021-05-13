@@ -35,7 +35,7 @@ class PriceListController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $priceList = $request->isMethod('put') ? PriceList::findOrFail($request->vehicle_id) : new PriceList();
+        $priceList = $request->isMethod('put') ? PriceList::findOrFail($request->price_list_id) : new PriceList();
 
         $priceList->id = $request->input('price_list_id');
         $priceList->price_per_hour = $request->input('price_per_hour');

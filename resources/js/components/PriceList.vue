@@ -178,7 +178,7 @@ export default {
                     .then(data => {
                         this.clearForm();
                         alert('Cennik poprawnie wyedytowany!');
-                        this.fetchVehicles();
+                        this.fetchPriceLists();
                     })
                     .catch(err => console.log(err));
             }
