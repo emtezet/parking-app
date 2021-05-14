@@ -42,7 +42,6 @@ axios.defaults.baseURL = 'http://parking.localhost/api';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
-
 import App from './components/App'
 import LoginPage from './components/LoginPage'
 import VehicleType from "./components/VehicleType";
@@ -58,6 +57,9 @@ const router = new VueRouter({
             name: 'login',
             path: '/login',
             component: LoginPage,
+            meta: {
+                requiresRole: ['']
+            }
         },
         {
             name: 'homepage',
@@ -68,36 +70,59 @@ const router = new VueRouter({
             name: 'parking',
             path: '/parking',
             component: Parking,
+            meta: {
+                requiresRole: ['','admin']
+            }
         },
         //Vehicle Type
         {
             name: 'vehicle_type',
             path: '/vehicle_type',
             component: VehicleType,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['admin']
+            }
         },
         //Reservation
         {
             name: 'reservation',
             path: '/reservation',
             component: Reservation,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['insert']
+            }
         },
         //Vehicle
         {
             name: 'vehicle',
             path: '/vehicle',
             component: Vehicle,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['admin','insert']
+            }
         },
-        //Vehicle
+        //Price List
         {
             name: 'price_list',
             path: '/price_list',
             component: PriceList,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['admin']
+            }
         },
         //Rent
         {
             name: 'rent',
             path: '/rent',
             component: Rent,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['insert']
+            }
         },
     ],
 });
@@ -108,44 +133,51 @@ const store = new Vuex.Store({
     },
 
     mutations: {
-        setUserData (state, userData) {
+        setUserData(state, userData) {
             state.user = userData
             localStorage.setItem('user', JSON.stringify(userData))
             axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`
         },
 
-        clearUserData () {
+        clearUserData() {
             localStorage.removeItem('user');
             location.replace('/');
         }
     },
 
     actions: {
-        login ({ commit }, credentials) {
+        login({commit}, credentials) {
             return axios
                 .post('/login', credentials)
-                .then(({ data }) => {
+                .then(({data}) => {
                     commit('setUserData', data)
                 })
         },
 
-        logout ({ commit }) {
+        logout({commit}) {
             commit('clearUserData')
         }
     },
 
-    getters : {
+    getters: {
         isLogged: state => !!state.user
     }
 })
 
 router.beforeEach((to, from, next) => {
-    const loggedIn = localStorage.getItem('user')
+    const loggedIn = localStorage.getItem('user');
+    const userRole = loggedIn ? JSON.parse(localStorage.getItem('user')).user.role : '';
 
-    if (to.matched.some(record => record.meta.auth) && !loggedIn) {
+    if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
         next('/login')
         return
     }
+
+    if (to.meta.requiresRole !== undefined && !to.meta.requiresRole.includes(userRole)) {
+        next('/')
+        return
+    }
+
     next()
 })
 
@@ -157,7 +189,7 @@ const app = new Vue({
     components: {App},
     router,
     store,
-    created () {
+    created() {
         const userInfo = localStorage.getItem('user')
         if (userInfo) {
             const userData = JSON.parse(userInfo)
@@ -176,21 +208,21 @@ const app = new Vue({
 });
 
 //Error Modal
-window.showErrorModal = function(errorsMessagesArray, reload = false){
+window.showErrorModal = function (errorsMessagesArray, reload = false) {
     $("#info-modal-body").empty();
 
-    if(typeof errorsMessagesArray == 'string'){
-        $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+errorsMessagesArray+'</div>');
+    if (typeof errorsMessagesArray == 'string') {
+        $("#info-modal-body").append('<div class="alert alert-danger" role="alert">' + errorsMessagesArray + '</div>');
     } else if (typeof errorsMessagesArray == 'object') {
         for (const [key, value] of Object.entries(errorsMessagesArray)) {
 
-            value.forEach(function(element){
-                $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+element+'</div>');
+            value.forEach(function (element) {
+                $("#info-modal-body").append('<div class="alert alert-danger" role="alert">' + element + '</div>');
             });
         }
-    } else{
-        errorsMessagesArray.forEach(function(element){
-            $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+element+'</div>');
+    } else {
+        errorsMessagesArray.forEach(function (element) {
+            $("#info-modal-body").append('<div class="alert alert-danger" role="alert">' + element + '</div>');
         });
     }
 
@@ -200,8 +232,7 @@ window.showErrorModal = function(errorsMessagesArray, reload = false){
         $('#info-modal').on('hidden.bs.modal', function (e) {
             window.location.reload();
         })
-    }
-    else if(typeof reload === 'string' || reload instanceof String) {
+    } else if (typeof reload === 'string' || reload instanceof String) {
         $('#info-modal').on('hidden.bs.modal', function (e) {
             window.location.replace(reload);
         })
