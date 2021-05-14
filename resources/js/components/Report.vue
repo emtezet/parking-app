@@ -28,6 +28,7 @@
                 </div>
 
                 <button type="button" @click="generateReport"  class="btn btn-success">Generuj</button>
+                <button type="button" @click="generateReportCSV"  class="btn btn-success">Generuj do pliku CSV</button>
             </form>
         </div>
 
@@ -119,6 +120,37 @@ export default {
                     this.clearForm();
                     this.rents = res.data;
                     this.reportSum = res.price
+                })
+                .catch(err => console.log(err));
+        },
+        generateReportCSV() {
+            fetch('api/rent/get_report_csv', {
+                method: 'post',
+                body: JSON.stringify({
+                    date_from: this.reportDayFrom,
+                    date_to: this.reportDayTo,
+                    vehicle_id: this.vehicle.id
+                }),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(res => {
+                    //console.log(res);
+
+                    // let blob = new Blob([res.data],{ type:'tex/csv'});
+                    // let link = document.createElement('a');
+                    // link.href = window.URL.createObjectURL(blob);
+                    // link.download = ;
+                    // link.click();
+
+                    const url = window.URL.createObjectURL(new Blob([res.data], {type: 'text/csv'}));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', this.reportDayFrom + '_' +  this.reportDayTo + '_' + this.vehicle.registration_number + "_rents.csv");
+                    document.body.appendChild(link);
+                    link.click();
                 })
                 .catch(err => console.log(err));
         },

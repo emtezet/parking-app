@@ -9,6 +9,8 @@ use App\Vehicle;
 use Illuminate\Http\Request;
 use App\Http\Resources\Rent as RentResource;
 use App\Http\Resources\Reservation as ReservationResource;
+use Illuminate\Support\Facades\Response;
+
 
 
 class RentController extends Controller
@@ -134,7 +136,6 @@ class RentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
      *
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -165,5 +166,48 @@ class RentController extends Controller
         ];
 
         return $ret;
+    }
+
+    public function getReportCsv(Request $request)
+    {
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $vehicle = Vehicle::where('id', $request->input('vehicle_id'))->first();
+
+        $fileName = $dateFrom . '_' . $dateTo . '_' .$vehicle->registration_number . '_rents.csv';
+        $rents = Rent::where('start_time', '>=', $dateFrom)
+            ->where('start_time', '<=', $dateTo)
+            ->where('vehicle_id', '=', $vehicle->id)
+            ->whereNotNull('price')
+            ->orderBy('start_time', 'DESC')
+            ->get();
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('date_from', 'date_to', 'parking', 'price');
+
+        $callback = function() use($rents, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($rents as $rent) {
+                $row['date_from']  = $rent->start_time;
+                $row['date_to']  = $rent->end_time;
+                $row['parking']  = $rent->parking->name;
+                $row['price']  = $rent->price;
+
+                fputcsv($file, array($row['date_from'], $row['date_to'], $row['parking'], $row['price']));
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
     }
 }

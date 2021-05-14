@@ -145,3 +145,4 @@ Route::post('/rent/from_reservation/{id}', 'RentController@createFromReservation
 
 //Report
 Route::post('/rent/get_report/', 'RentController@getReport');
+Route::post('/rent/get_report_csv/', 'RentController@getReportCSV');
