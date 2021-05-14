@@ -19,7 +19,7 @@ class Parking extends Model
     }
 
     public function activeRents() {
-        return $this->hasMany(Rent::class)->where('price', '=', null);
+        return $this->hasMany(Rent::class)->whereNull('price');
     }
 
     public function activeReservations() {

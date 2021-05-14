@@ -123,3 +123,19 @@ Route::put('/price_list', 'PriceListController@store');
 
 //Delete
 Route::delete('/price_list/{id}', 'PriceListController@destroy');
+
+////////////////////
+//Rent Controller //
+////////////////////
+
+//List
+Route::get('/rents', 'RentController@index');
+
+//Create
+Route::post('/rent', 'RentController@store');
+
+//Update
+Route::put('/rent', 'RentController@store');
+
+//Delete
+Route::delete('/rent/{id}', 'RentController@destroy');

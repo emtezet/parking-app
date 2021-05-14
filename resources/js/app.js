@@ -49,6 +49,7 @@ import VehicleType from "./components/VehicleType";
 import Reservation from "./components/Reservation";
 import Vehicle from "./components/Vehicle";
 import PriceList from "./components/PriceList";
+import Rent from "./components/Rent";
 
 const router = new VueRouter({
     mode: 'history',
@@ -91,6 +92,12 @@ const router = new VueRouter({
             name: 'price_list',
             path: '/price_list',
             component: PriceList,
+        },
+        //Rent
+        {
+            name: 'rent',
+            path: '/rent',
+            component: Rent,
         },
     ],
 });
@@ -181,9 +188,7 @@ window.showErrorModal = function(errorsMessagesArray, reload = false){
                 $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+element+'</div>');
             });
         }
-    }
-
-    else{
+    } else{
         errorsMessagesArray.forEach(function(element){
             $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+element+'</div>');
         });
