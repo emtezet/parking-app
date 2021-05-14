@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Parking;
+use App\Reservation;
 use App\PriceList;
 use App\Rent;
+use App\Vehicle;
 use Illuminate\Http\Request;
 use App\Http\Resources\Rent as RentResource;
+use App\Http\Resources\Reservation as ReservationResource;
 
 
 class RentController extends Controller
@@ -105,6 +107,29 @@ class RentController extends Controller
 
         if($rent->save()) {
             return new RentResource($rent);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createFromReservation($id) {
+
+        $reservation = Reservation::findOrFail($id);
+
+        $vehicle = Vehicle::where('registration_number', $reservation->registration_number)->first();
+
+
+        $rent = new Rent();
+        $rent->parking_id = $reservation->parking_id;
+        $rent->vehicle_id = $vehicle->id;
+        $rent->start_time = new \DateTime('now', new \DateTimeZone('Europe/Warsaw'));
+
+        if($reservation->delete() && $rent->save()) {
+            return new ReservationResource($reservation);
         }
     }
 }

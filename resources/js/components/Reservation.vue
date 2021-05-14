@@ -10,8 +10,8 @@
                 <p class="mb-0">Parking: {{ reservation.parking_name }}</p>
                 <p class="mb-0">Ważna do: {{ reservation.valid_to }}</p>
                 <hr>
-                <button @click="deleteReservation(reservation.id)" class="btn btn-danger mb-1" v-if="user_role === 'insert'">Usuń</button>
-                <button @click="addRentFromReservation(reservation.id)" class="btn btn-success" v-if="user_role === 'insert'">Dodaj parkowanie</button>
+                <button @click="deleteReservation(reservation.id)" class="btn btn-danger btn-sm mb-1" v-if="user_role === 'insert'">Usuń</button>
+                <button @click="addRentFromReservation(reservation.id)" class="btn btn-success btn-sm" v-if="user_role === 'insert'">Dodaj parkowanie</button>
             </div>
         </div>
 
@@ -66,7 +66,20 @@ export default {
                     })
                     .catch(err => console.log(err));
             }
-        }
+        },
+        addRentFromReservation(id) {
+            if (confirm('Czy na pewno chcesz rozpocząć parkowanie?')) {
+                fetch(`api/rent/from_reservation/${id}`, {
+                    method: 'post'
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        showSuccessModal('Parkowanie dodane!');
+                        this.fetchReservations();
+                    })
+                    .catch(err => console.log(err));
+            }
+        },
     }
 }
 </script>

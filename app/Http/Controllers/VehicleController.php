@@ -39,12 +39,12 @@ class VehicleController extends Controller
     public function store(Request $request) {
 
         Validator::make($request->all(), [
-            'registration_number' => 'required|unique:App\Vehicle,registration_number|max:5',
+            'registration_number' => 'required|unique:App\Vehicle,registration_number|max:10',
             'vehicle_type_id' => 'required',
         ], [
             'registration_number.required' => 'Niepoprawnie wypełniony nr rejestracyjny!',
             'registration_number.unique' => 'Pojazd o tym numerze rejestracyjnym już istnieje!',
-            'registration_number.max' => 'za długi!',
+            'registration_number.max' => 'Numer rejestracyjny może mieć maks. 10 znaków!',
             'vehicle_type_id.required' => 'Wybierz typ pojazdu!'
         ])->validate();
 

@@ -139,3 +139,6 @@ Route::put('/rent', 'RentController@store');
 
 //Delete
 Route::delete('/rent/{id}', 'RentController@destroy');
+
+//Create from Reservation
+Route::post('/rent/from_reservation/{id}', 'RentController@createFromReservation');
