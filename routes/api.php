@@ -142,3 +142,6 @@ Route::delete('/rent/{id}', 'RentController@destroy');
 
 //Create from Reservation
 Route::post('/rent/from_reservation/{id}', 'RentController@createFromReservation');
+
+//Report
+Route::post('/rent/get_report/', 'RentController@getReport');

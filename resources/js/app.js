@@ -49,6 +49,7 @@ import Reservation from "./components/Reservation";
 import Vehicle from "./components/Vehicle";
 import PriceList from "./components/PriceList";
 import Rent from "./components/Rent";
+import Report from "./components/Report";
 
 const router = new VueRouter({
     mode: 'history',
@@ -122,6 +123,16 @@ const router = new VueRouter({
             meta: {
                 requiresAuth: true,
                 requiresRole: ['insert']
+            }
+        },
+        //Report
+        {
+            name: 'report',
+            path: '/report',
+            component: Report,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['admin']
             }
         },
     ],

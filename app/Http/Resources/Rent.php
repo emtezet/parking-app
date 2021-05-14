@@ -19,7 +19,24 @@ class Rent extends JsonResource
             'parking_name' => $this->parking->name,
             'vehicle_id' => $this->vehicle->id,
             'vehicle_registration_number' => $this->vehicle->registration_number,
-            'start_time' => $this->start_time
+            'start_time' => $this->start_time,
+            'price' => $this->price,
+            'end_time' => $this->end_time
         ];
     }
+
+//    public function with($request) {
+//
+//        $rents = $this->collection;
+//
+//        foreach($rents as $rent) {
+//            $price += $rent->price;
+//        }
+//
+//        return [
+//            'report' => [
+//                'priceSum' => $price
+//            ]
+//        ];
+//    }
 }

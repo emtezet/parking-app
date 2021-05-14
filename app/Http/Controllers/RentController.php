@@ -132,4 +132,27 @@ class RentController extends Controller
             return new ReservationResource($reservation);
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getReport(Request $request) {
+
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $vehicle = Vehicle::where('id', $request->input('vehicle_id'))->first();
+
+
+        $rents = Rent::where('start_time', '>=', $dateFrom)
+            ->where('start_time', '<=', $dateTo)
+            ->where('vehicle_id', '=', $vehicle->id)
+            ->whereNotNull('price')
+            ->orderBy('start_time', 'DESC')
+            ->get();
+
+        return RentResource::collection($rents);
+    }
 }
