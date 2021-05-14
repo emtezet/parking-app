@@ -153,6 +153,17 @@ class RentController extends Controller
             ->orderBy('start_time', 'DESC')
             ->get();
 
-        return RentResource::collection($rents);
+        $price = 0;
+        foreach($rents as $rent) {
+            $price += $rent->price;
+        }
+
+        $ret = RentResource::collection($rents);
+
+        $ret->with = [
+            'price' => sprintf('%.2f', $price)
+        ];
+
+        return $ret;
     }
 }

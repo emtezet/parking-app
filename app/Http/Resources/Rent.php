@@ -25,6 +25,12 @@ class Rent extends JsonResource
         ];
     }
 
+    public function with($request) {
+        return [
+            'price' => 'test'
+        ];
+    }
+
 //    public function with($request) {
 //
 //        $rents = $this->collection;

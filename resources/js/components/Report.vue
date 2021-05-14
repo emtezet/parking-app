@@ -19,9 +19,9 @@
 
                 <div class="form-group">
                     Pojazd
-                    <select class="form-control" v-model="vehicle_id">
+                    <select class="form-control" v-model="vehicle">
                         <option disabled value="">Pojazd</option>
-                        <option v-for="vehicle in vehicles" v-bind:value="vehicle.id">
+                        <option v-for="vehicle in vehicles" v-bind:value="{id: vehicle.id, registration_number: vehicle.registration_number}" >
                             {{ vehicle.registration_number }} - {{ vehicle.vehicle_type_name }}
                         </option>
                     </select>
@@ -34,7 +34,7 @@
         <div class="col-12 col-md-12" v-if="reportVisibility">
             <div class="card">
                 <div class="h5 card-header">
-                    Raport za okres {{ reportDayFrom }} do {{ reportDayTo }} dla pojazdu nr rej. {{ reportVehicleRegistrationNumber }}
+                    Raport za okres {{ reportDayFrom }} do {{ reportDayTo }} dla pojazdu nr rej. {{ vehicle.registration_number }}
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Parkowania:</h5>
@@ -47,13 +47,10 @@
                     </ul>
                 </div>
                 <div class="card-footer text-muted text-right">
-                    Suma do zapłaty: <span class="font-weight-bold">{{ reportSum }}</span>
+                    Suma do zapłaty: <span class="font-weight-bold">{{ reportSum }} zł</span>
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </template>
 
@@ -65,7 +62,7 @@ export default {
     ],
     data() {
         return {
-            reportVisibility: false,
+            reportVisibility: true,
             reportDayFrom: '',
             reportDayTo: '',
             reportSum: '',
@@ -84,6 +81,10 @@ export default {
                 'end_time': ''
             },
             vehicle_id: '',
+            vehicle: {
+                id: '',
+                registration_number: ''
+            },
 
         };
     },
@@ -107,7 +108,7 @@ export default {
                 body: JSON.stringify({
                     date_from: this.reportDayFrom,
                     date_to: this.reportDayTo,
-                    vehicle_id: this.vehicle_id
+                    vehicle_id: this.vehicle.id
                 }),
                 headers: {
                     'content-type': 'application/json'
@@ -117,6 +118,7 @@ export default {
                 .then(res => {
                     this.clearForm();
                     this.rents = res.data;
+                    this.reportSum = res.price
                 })
                 .catch(err => console.log(err));
         },
