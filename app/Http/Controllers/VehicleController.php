@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Vehicle;
 use Illuminate\Http\Request;
 use App\Http\Resources\Vehicle as VehicleResource;
+use Illuminate\Support\Facades\Validator;
 
 
 class VehicleController extends Controller
@@ -36,15 +37,30 @@ class VehicleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $vehicle = $request->isMethod('put') ? Vehicle::findOrFail($request->vehicle_id) : new Vehicle();
 
-        $vehicle->id = $request->input('vehicle_id');
-        $vehicle->registration_number = $request->input('registration_number');
-        $vehicle->vehicle_type_id = $request->input('vehicle_type_id');
+        Validator::make($request->all(), [
+            'registration_number' => 'required|unique:App\Vehicle,registration_number|max:5',
+            'vehicle_type_id' => 'required',
+        ], [
+            'registration_number.required' => 'Niepoprawnie wypełniony nr rejestracyjny!',
+            'registration_number.unique' => 'Pojazd o tym numerze rejestracyjnym już istnieje!',
+            'registration_number.max' => 'za długi!',
+            'vehicle_type_id.required' => 'Wybierz typ pojazdu!'
+        ])->validate();
 
-        if($vehicle->save()) {
-            return new VehicleResource($vehicle);
-        }
+        //if($validator->fails()) {
+            //return $validator->errors()->toJson();
+        //} else {
+            $vehicle = $request->isMethod('put') ? Vehicle::findOrFail($request->vehicle_id) : new Vehicle();
+
+            $vehicle->id = $request->input('vehicle_id');
+            $vehicle->registration_number = $request->input('registration_number');
+            $vehicle->vehicle_type_id = $request->input('vehicle_type_id');
+
+            if($vehicle->save()) {
+                return new VehicleResource($vehicle);
+            }
+        //}
     }
 
     /**

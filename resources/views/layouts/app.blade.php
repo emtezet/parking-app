@@ -24,6 +24,29 @@
     <div id="app">
         <div class="container-fluid">
             <app :app_name="'{{ config('app.name', 'Laravel') }}'"></app>
+
+            <div class="modal" id="info-modal" tabindex="-1" role="dialog" aria-labelledby="info-modal-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div id="info-modal-body" class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="info-modal-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal" role="document">
+                    <div class="modal-content">
+                        <div id="confirm-modal-body" class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">NIE</button>
+                            <button id="confirm-modal-yes-btn" type="button" class="btn btn-success" data-dismiss="modal">TAK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

@@ -39,6 +39,9 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 
 axios.defaults.baseURL = 'http://parking.localhost/api';
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+
 
 import App from './components/App'
 import LoginPage from './components/LoginPage'
@@ -164,3 +167,70 @@ const app = new Vue({
         )
     },
 });
+
+//Error Modal
+window.showErrorModal = function(errorsMessagesArray, reload = false){
+    $("#info-modal-body").empty();
+
+    if(typeof errorsMessagesArray == 'string'){
+        $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+errorsMessagesArray+'</div>');
+    } else if (typeof errorsMessagesArray == 'object') {
+        for (const [key, value] of Object.entries(errorsMessagesArray)) {
+
+            value.forEach(function(element){
+                $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+element+'</div>');
+            });
+        }
+    }
+
+    else{
+        errorsMessagesArray.forEach(function(element){
+            $("#info-modal-body").append('<div class="alert alert-danger" role="alert">'+element+'</div>');
+        });
+    }
+
+    $('#info-modal').modal('show');
+
+    if (reload === true) {
+        $('#info-modal').on('hidden.bs.modal', function (e) {
+            window.location.reload();
+        })
+    }
+    else if(typeof reload === 'string' || reload instanceof String) {
+        $('#info-modal').on('hidden.bs.modal', function (e) {
+            window.location.replace(reload);
+        })
+    }
+
+    $('#info-modal').keypress(function (e) {
+        let keyCode = (event.keyCode ? event.keyCode : event.which);
+        if (keyCode === 13) {
+            $('#info-modal').trigger('click');
+            return false;
+        }
+    });
+};
+
+//Success Modal
+window.showSuccessModal = function (successMessage, reload = false) {
+    $("#info-modal-body").empty().append('<div class="alert alert-success" role="alert">' + decodeURIComponent(successMessage) + '</div>');
+    $('#info-modal').modal('show');
+
+    if (reload === true) {
+        $('#info-modal').on('hidden.bs.modal', function (e) {
+            window.location.reload();
+        })
+    } else if (typeof reload === 'string' || reload instanceof String) {
+        $('#info-modal').on('hidden.bs.modal', function (e) {
+            window.location.replace(reload);
+        })
+    }
+
+    $('#info-modal').keypress(function (e) {
+        let keyCode = (event.keyCode ? event.keyCode : event.which);
+        if (keyCode === 13) {
+            $('#info-modal').trigger('click');
+            return false;
+        }
+    });
+};

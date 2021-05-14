@@ -8,7 +8,8 @@
             <p class="mt-3 h5">Dodawanie/edycja pojazdu</p>
             <form @submit.prevent="addVehicle" class="mb-3">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Nr rejestracyjny" v-model="vehicle.registration_number">
+                    <input type="text" class="form-control" placeholder="Nr rejestracyjny"
+                           v-model="vehicle.registration_number">
                 </div>
 
                 <div class="form-group">
@@ -21,7 +22,6 @@
                 </div>
 
 
-
                 <button type="submit" class="btn btn-success">Zapisz</button>
             </form>
         </div>
@@ -31,9 +31,11 @@
             <div class="card card-body">
                 <h3>Nr rej. {{ vehicle.registration_number }}</h3> ({{ vehicle.vehicle_type_name }})
                 <hr v-if="user_role === 'admin'">
-                <button @click="editVehicle(vehicle)" class="btn btn-warning btn-sm mb-2" v-if="user_role === 'admin'">Edytuj
+                <button @click="editVehicle(vehicle)" class="btn btn-warning btn-sm mb-2" v-if="user_role === 'admin'">
+                    Edytuj
                 </button>
-                <button @click="deleteVehicle(vehicle.id)" class="btn btn-danger btn-sm" v-if="user_role === 'admin'">Usuń
+                <button @click="deleteVehicle(vehicle.id)" class="btn btn-danger btn-sm" v-if="user_role === 'admin'">
+                    Usuń
                 </button>
             </div>
         </div>
@@ -44,6 +46,22 @@
 
 <script>
 import {mapGetters} from "vuex";
+
+class FormErrors {
+    constructor() {
+        this.errors = {};
+    }
+
+    get(field) {
+        if (this.errors[field]) {
+            return this.errors[field][0];
+        }
+    }
+
+    record(errors) {
+        this.errors = errors;
+    }
+}
 
 export default {
     name: "Vehicle",
@@ -65,7 +83,8 @@ export default {
                 name: ''
             },
             vehicle_id: '',
-            edit: false
+            edit: false,
+            form_errors: new FormErrors()
         };
     },
     created() {
@@ -121,16 +140,23 @@ export default {
                     method: 'post',
                     body: JSON.stringify(this.vehicle),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
-                    .then(data => {
-                        this.clearForm();
-                        alert('Pojazd dodany!');
-                        this.fetchVehicles();
+                    .then((data) => {
+                        if (data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Pojazd dodany!');
+                            this.fetchVehicles();
+                        }
                     })
-                    .catch(err => console.log(err));
+                    .catch((err) => {
+                        console.log(err)
+                    });
             } else {
                 // Update
                 fetch('api/vehicle', {
