@@ -9,17 +9,17 @@
             <form @submit.prevent="generateReport" class="mb-3">
 
                 <div class="form-group">
-                    Data od <input type="date" class="form-control" placeholder="Data od" v-model="reportDayFrom">
+                    Data od <input @change="hideReport" type="date" class="form-control" placeholder="Data od" v-model="reportDayFrom">
                 </div>
 
                 <div class="form-group">
                     Data do
-                    <input type="date" class="form-control" placeholder="Data do" v-model="reportDayTo">
+                    <input type="date" @change="hideReport" class="form-control" placeholder="Data do" v-model="reportDayTo">
                 </div>
 
                 <div class="form-group">
                     Pojazd
-                    <select class="form-control" v-model="vehicle">
+                    <select @change="hideReport" class="form-control" v-model="vehicle">
                         <option disabled value="">Pojazd</option>
                         <option v-for="vehicle in vehicles" v-bind:value="{id: vehicle.id, registration_number: vehicle.registration_number}" >
                             {{ vehicle.registration_number }} - {{ vehicle.vehicle_type_name }}
@@ -35,7 +35,7 @@
         <div class="col-12 col-md-12" v-if="reportVisibility">
             <div class="card">
                 <div class="h5 card-header">
-                    Raport za okres {{ reportDayFrom }} do {{ reportDayTo }} dla pojazdu nr rej. {{ vehicle.registration_number }}
+                    Raport za okres <span class="font-weight-bold">{{ reportDayFrom }}</span> do <span class="font-weight-bold">{{ reportDayTo }}</span> dla pojazdu nr rej. <span class="font-weight-bold">{{ vehicle.registration_number }}</span>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Parkowania:</h5>
@@ -63,7 +63,7 @@ export default {
     ],
     data() {
         return {
-            reportVisibility: true,
+            reportVisibility: false,
             reportDayFrom: '',
             reportDayTo: '',
             reportSum: '',
@@ -86,7 +86,6 @@ export default {
                 id: '',
                 registration_number: ''
             },
-
         };
     },
     created() {
@@ -117,7 +116,7 @@ export default {
             })
                 .then(res => res.json())
                 .then(res => {
-                    this.clearForm();
+                    this.showReport();
                     this.rents = res.data;
                     this.reportSum = res.price
                 })
@@ -135,30 +134,25 @@ export default {
                     'content-type': 'application/json'
                 }
             })
-                .then(res => res.json())
                 .then(res => {
-                    //console.log(res);
-
-                    // let blob = new Blob([res.data],{ type:'tex/csv'});
-                    // let link = document.createElement('a');
-                    // link.href = window.URL.createObjectURL(blob);
-                    // link.download = ;
-                    // link.click();
-
-                    const url = window.URL.createObjectURL(new Blob([res.data], {type: 'text/csv'}));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', this.reportDayFrom + '_' +  this.reportDayTo + '_' + this.vehicle.registration_number + "_rents.csv");
-                    document.body.appendChild(link);
-                    link.click();
+                    res.blob().then(res2 => {
+                        const url = window.URL.createObjectURL(res2);
+                        const link = document.createElement("a");
+                        link.href = url;
+                        link.setAttribute("download", this.reportDayFrom + '_' +  this.reportDayTo + '_' + this.vehicle.registration_number + "_rents.csv");
+                        document.body.appendChild(link);
+                        link.click();
+                    });
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    console.log(err)
+                });
         },
-        clearForm() {
+        showReport() {
             this.reportVisibility = true;
-            // this.rent.id = null;
-            // this.rent.parking_id = '';
-            // this.rent.vehicle_id = '';
+        },
+        hideReport() {
+            this.reportVisibility = false;
         }
     }
 }

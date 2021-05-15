@@ -34,9 +34,11 @@ import Vue from 'vue'
 import VueRouter from "vue-router";
 import Vuex from 'vuex';
 import axios from 'axios';
+import excel from 'vue-export-excel';
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+//Vue.use(excel);
 
 axios.defaults.baseURL = 'http://parking.localhost/api';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
