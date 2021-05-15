@@ -283,3 +283,13 @@ window.showSuccessModal = function (successMessage, reload = false) {
         }
     });
 };
+
+//Confirm Modal
+window.showConfirmModal = function (confirmMessage, yesCallbackFunction, params) {
+    $("#confirm-modal-body").empty().append('<div class="alert alert-warning" role="alert">' + decodeURIComponent(confirmMessage) + '</div>');
+    $("#confirm-modal-yes-btn").unbind("click").click(function () {
+        yesCallbackFunction.apply(this, params);
+    });
+
+    $('#confirm-modal').modal('show');
+};

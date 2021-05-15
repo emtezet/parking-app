@@ -48,19 +48,16 @@ class VehicleController extends Controller
             'vehicle_type_id.required' => 'Wybierz typ pojazdu!'
         ])->validate();
 
-        //if($validator->fails()) {
-            //return $validator->errors()->toJson();
-        //} else {
-            $vehicle = $request->isMethod('put') ? Vehicle::findOrFail($request->vehicle_id) : new Vehicle();
+        $vehicle = $request->isMethod('put') ? Vehicle::findOrFail($request->vehicle_id) : new Vehicle();
 
-            $vehicle->id = $request->input('vehicle_id');
-            $vehicle->registration_number = $request->input('registration_number');
-            $vehicle->vehicle_type_id = $request->input('vehicle_type_id');
+        $vehicle->id = $request->input('vehicle_id');
+        $vehicle->registration_number = $request->input('registration_number');
+        $vehicle->vehicle_type_id = $request->input('vehicle_type_id');
 
-            if($vehicle->save()) {
-                return new VehicleResource($vehicle);
-            }
-        //}
+        if ($vehicle->save()) {
+            return new VehicleResource($vehicle);
+        }
+
     }
 
     /**
@@ -103,7 +100,7 @@ class VehicleController extends Controller
     public function destroy($id) {
         $vehicle = Vehicle::findOrFail($id);
 
-        if($vehicle->delete()) {
+        if ($vehicle->delete()) {
             return new VehicleResource($vehicle);
         }
     }

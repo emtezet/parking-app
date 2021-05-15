@@ -87,18 +87,18 @@ export default {
                 .catch(err => console.log(err));
         },
         deleteParking(id) {
-            if (confirm('Czy na pewno chcesz usunąć ten parking?')) {
+            showConfirmModal('Czy na pewno chcesz usunąć ten parking?', function (param){
                 fetch(`api/parking/${id}`, {
                     method: 'delete'
                 })
                     .then(res => res.json())
                     .then(data => {
-                        alert('Parking usunięty!');
-                        this.clearForm();
-                        this.fetchParkings();
+                        showSuccessModal('Parking usunięty!');
+                        param.clearForm();
+                        param.fetchParkings();
                     })
                     .catch(err => console.log(err));
-            }
+            },[this])
         },
         makeReservation(parking_id) {
             let registrationNumber = prompt('Podaj tablicę rejestracyjną:');
@@ -136,14 +136,20 @@ export default {
                     method: 'post',
                     body: JSON.stringify(this.parking),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Parking dodany!');
-                        this.fetchParkings();
+                        if(data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Parking dodany!');
+                            this.fetchParkings();
+                        }
+
                     })
                     .catch(err => console.log(err));
             } else {
@@ -152,14 +158,19 @@ export default {
                     method: 'put',
                     body: JSON.stringify(this.parking),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Parking poprawnie wyedytowany!');
-                        this.fetchParkings();
+                        if(data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Parking poprawnie wyedytowany!');
+                            this.fetchParkings();
+                        }
                     })
                     .catch(err => console.log(err));
             }
