@@ -6,6 +6,7 @@ use App\Vehicle;
 use Illuminate\Http\Request;
 use App\Http\Resources\Vehicle as VehicleResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
 class VehicleController extends Controller
@@ -38,15 +39,21 @@ class VehicleController extends Controller
      */
     public function store(Request $request) {
 
-        Validator::make($request->all(), [
-            'registration_number' => 'required|unique:App\Vehicle,registration_number|max:10',
+        $validator = Validator::make($request->all(), [
+            'registration_number' => [
+                'required',
+                'max:10',
+                Rule::unique('vehicles')->ignore($request->vehicle_id)
+            ],
             'vehicle_type_id' => 'required',
         ], [
-            'registration_number.required' => 'Niepoprawnie wypełniony nr rejestracyjny!',
+            'registration_number.required' => 'Nr rejestracyjny jest wymagany!',
             'registration_number.unique' => 'Pojazd o tym numerze rejestracyjnym już istnieje!',
             'registration_number.max' => 'Numer rejestracyjny może mieć maks. 10 znaków!',
             'vehicle_type_id.required' => 'Wybierz typ pojazdu!'
-        ])->validate();
+        ]);
+
+        $validator->validate();
 
         $vehicle = $request->isMethod('put') ? Vehicle::findOrFail($request->vehicle_id) : new Vehicle();
 

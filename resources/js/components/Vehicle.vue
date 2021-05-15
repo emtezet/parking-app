@@ -113,18 +113,19 @@ export default {
                 .catch(err => console.log(err));
         },
         deleteVehicle(id) {
-            if (confirm('Czy na pewno chcesz usunąć ten pojazd?')) {
+
+            showConfirmModal('Czy na pewno chcesz usunąć ten pojazd?', function(param) {
                 fetch(`api/vehicle/${id}`, {
                     method: 'delete'
                 })
                     .then(res => res.json())
                     .then(data => {
-                        alert('Pojazd usunięty!');
-                        this.clearForm();
-                        this.fetchVehicles();
+                        showSuccessModal('Pojazd usunięty!');
+                        param.clearForm();
+                        param.fetchVehicles();
                     })
                     .catch(err => console.log(err));
-            }
+            },[this]);
         },
         editVehicle(vehicle) {
             this.edit = true;
@@ -163,14 +164,19 @@ export default {
                     method: 'put',
                     body: JSON.stringify(this.vehicle),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Pojazd poprawnie wyedytowany!');
-                        this.fetchVehicles();
+                        if (data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Pojazd poprawnie wyedytowany!');
+                            this.fetchVehicles();
+                        }
                     })
                     .catch(err => console.log(err));
             }
