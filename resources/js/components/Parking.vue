@@ -34,7 +34,7 @@
                 </button>
                 <button @click="deleteParking(parking.id)" class="btn btn-danger btn-sm" v-if="user_role === 'admin'">Usuń
                 </button>
-                <button @click="makeReservation(parking.id)" class="btn btn-info text-white"
+                <button @click="makeReservation(parking.id)" class="btn btn-info btn-sm text-white"
                         v-if="user_role === '' && parking.free_places > 0">Zarezerwuj
                 </button>
             </div>
