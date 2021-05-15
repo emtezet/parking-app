@@ -111,14 +111,19 @@ export default {
                     vehicle_id: this.vehicle.id
                 }),
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
                 .then(res => res.json())
                 .then(res => {
-                    this.showReport();
-                    this.rents = res.data;
-                    this.reportSum = res.price
+                    if(res.errors) {
+                        showErrorModal(res.errors)
+                    } else {
+                        this.showReport();
+                        this.rents = res.data;
+                        this.reportSum = res.price
+                    }
                 })
                 .catch(err => console.log(err));
         },
@@ -131,18 +136,26 @@ export default {
                     vehicle_id: this.vehicle.id
                 }),
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
                 .then(res => {
-                    res.blob().then(res2 => {
-                        const url = window.URL.createObjectURL(res2);
-                        const link = document.createElement("a");
-                        link.href = url;
-                        link.setAttribute("download", this.reportDayFrom + '_' +  this.reportDayTo + '_' + this.vehicle.registration_number + "_rents.csv");
-                        document.body.appendChild(link);
-                        link.click();
-                    });
+
+                    if(res.status == '422') {
+                        res.json().then(err => {
+                            showErrorModal(err.errors)
+                        })
+                    } else {
+                        res.blob().then(res2 => {
+                            const url = window.URL.createObjectURL(res2);
+                            const link = document.createElement("a");
+                            link.href = url;
+                            link.setAttribute("download", this.reportDayFrom + '_' +  this.reportDayTo + '_' + this.vehicle.registration_number + "_rents.csv");
+                            document.body.appendChild(link);
+                            link.click();
+                        });
+                    }
                 })
                 .catch(err => {
                     console.log(err)

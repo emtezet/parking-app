@@ -6,6 +6,7 @@ use App\Reservation;
 use App\PriceList;
 use App\Rent;
 use App\Vehicle;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Rent as RentResource;
 use App\Http\Resources\Reservation as ReservationResource;
@@ -145,6 +146,36 @@ class RentController extends Controller
         $dateTo = $request->input('date_to');
         $vehicle = Vehicle::where('id', $request->input('vehicle_id'))->first();
 
+        $errors = [];
+
+        if(!$dateFrom) {
+            $errors[] = 'Data od jest wymagana!';
+        }
+
+        if(!$dateTo) {
+            $errors[] = 'Data do jest wymagana!';
+        }
+
+        if(!$request->input('vehicle_id')) {
+            $errors[] = 'Wybierz pojazd!';
+        }
+
+        if($dateFrom && $dateTo && $dateFrom > $dateTo) {
+            $errors[] = 'Data od nie może być większa od Daty do!';
+        }
+
+        if($request->input('vehicle_id') && !$vehicle) {
+            $errors[] = 'Pojazd nie istnieje w systemie!';
+        }
+
+
+        if(count($errors)) {
+            return response()->json([
+                'errors' => [
+                    'custom_errors' => $errors
+                ]
+            ], 422);
+        }
 
         $rents = Rent::where('start_time', '>=', $dateFrom)
             ->where('start_time', '<=', $dateTo)
@@ -171,6 +202,37 @@ class RentController extends Controller
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
         $vehicle = Vehicle::where('id', $request->input('vehicle_id'))->first();
+
+        $errors = [];
+
+        if(!$dateFrom) {
+            $errors[] = 'Data od jest wymagana!';
+        }
+
+        if(!$dateTo) {
+            $errors[] = 'Data do jest wymagana!';
+        }
+
+        if(!$request->input('vehicle_id')) {
+            $errors[] = 'Wybierz pojazd!';
+        }
+
+        if($dateFrom && $dateTo && $dateFrom > $dateTo) {
+            $errors[] = 'Data od nie może być większa od Daty do!';
+        }
+
+        if($request->input('vehicle_id') && !$vehicle) {
+            $errors[] = 'Pojazd nie istnieje w systemie!';
+        }
+
+
+        if(count($errors)) {
+            return response()->json([
+                'errors' => [
+                    'custom_errors' => $errors
+                ]
+            ], 422);
+        }
 
         $fileName = $dateFrom . '_' . $dateTo . '_' . $vehicle->registration_number . '_rents.csv';
         $rents = Rent::where('start_time', '>=', $dateFrom)
