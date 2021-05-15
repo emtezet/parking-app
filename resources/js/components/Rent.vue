@@ -113,17 +113,26 @@ export default {
                 .catch(err => console.log(err));
         },
         endRent(id) {
-            if (confirm('Czy na pewno chcesz zakończyć to parkowanie?')) {
+
+            showConfirmModal('Czy na pewno chcesz zakończyć to parkowanie?', function (param) {
                 fetch(`api/rent/${id}`, {
-                    method: 'delete'
+                    method: 'delete',
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        showSuccessModal('Parkowanie zakończone poprawnie!');
-                        this.fetchRents();
+                        if(data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            showSuccessModal('Parkowanie zakończone poprawnie!');
+                            param.fetchRents();
+                        }
                     })
                     .catch(err => console.log(err));
-            }
+            }, [this]);
         },
         addRent() {
             // Add
@@ -131,14 +140,19 @@ export default {
                 method: 'post',
                 body: JSON.stringify(this.rent),
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
                 .then(res => res.json())
                 .then(data => {
-                    this.clearForm();
-                    showSuccessModal('Parkowanie dodane!');
-                    this.fetchRents();
+                    if(data.errors) {
+                        showErrorModal(data.errors)
+                    } else {
+                        this.clearForm();
+                        showSuccessModal('Parkowanie dodane!');
+                        this.fetchRents();
+                    }
                 })
                 .catch(err => console.log(err));
         },

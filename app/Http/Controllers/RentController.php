@@ -46,6 +46,33 @@ class RentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+
+        $vehicleId = $request->input('vehicle_id');
+
+        $validator = Validator::make($request->all(), [
+            'parking_id' => [
+                'required',
+                'exists:App\Parking,id'
+            ],
+            'vehicle_id' => [
+                'required',
+                'exists:App\Vehicle,id',
+                Rule::unique('rents')->where(function($query) use ($vehicleId) {
+                    return $query->where('vehicle_id', $vehicleId)
+                        ->whereNull('end_time');
+                })
+            ]
+        ], [
+            'parking_id.required' => 'Wybierz parking!',
+            'parking_id.exists' => 'Parking nie istnieje!',
+            'vehicle_id.required' => 'Wybierz pojazd!',
+            'vehicle_id.exists' => 'Pojazd nie istnieje! Dodaj najpierw pojazd!',
+            'vehicle_id.unique' => 'Ten pojazd jest już aktualnie zaparkowany!'
+        ]);
+
+        $validator->validate();
+
+
         $rent = $request->isMethod('put') ? Rent::findOrFail($request->rent_id) : new Rent();
 
         $rent->id = $request->input('rent_id');
@@ -98,9 +125,30 @@ class RentController extends Controller
     public function destroy($id) {
         $rent = Rent::findOrFail($id);
 
+        $parkingId = $rent ? $rent->parking->id : '';
+        $vehicleTypeId = $rent ? $rent->vehicle->vehicleType->id : '';
+
+        $validator = Validator::make([
+            'parking_id' => $parkingId
+        ], [
+            'parking_id' => [
+                Rule::exists('price_lists')->where(function($query) use ($parkingId, $vehicleTypeId) {
+                    return $query->where('vehicle_type_id', $vehicleTypeId)
+                        ->where('parking_id', $parkingId);
+                })
+            ]
+        ], [
+            'parking_id.exists' => 'Dla tego typu pojazdu i parkingu nie określono cennika! Nie można zakończyć parkowania!',
+        ]);
+
+        $validator->validate();
+
+
         $rent->end_time = new \DateTime('now', new \DateTimeZone('Europe/Warsaw'));
 
-        $datesDiff = sprintf("%.2f", ($rent->end_time->getTimestamp() - strtotime($rent->start_time)) / 3600);
+        $startTime = new \DateTime($rent->start_time, new \DateTimeZone('Europe/Warsaw'));
+
+        $datesDiff = sprintf("%.2f", ($rent->end_time->getTimestamp() - $startTime->getTimestamp()) / 3600);
 
         /** @var PriceList $priceList */
         $priceList = PriceList::where('parking_id', '=', $rent->parking->id)
