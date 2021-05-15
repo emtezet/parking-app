@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Rent as RentResource;
 use App\Http\Resources\Reservation as ReservationResource;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
 class RentController extends Controller
@@ -121,8 +123,38 @@ class RentController extends Controller
     public function createFromReservation($id) {
 
         $reservation = Reservation::findOrFail($id);
+        $parkingId = $reservation ? $reservation->parking_id : '';
 
         $vehicle = Vehicle::where('registration_number', $reservation->registration_number)->first();
+        $vehicleId = $vehicle ? $vehicle->id : '';
+
+
+        $validator = Validator::make([
+            'parking_id' => $parkingId,
+            'vehicle_id' => $vehicleId
+        ], [
+            'parking_id' => [
+                'required',
+                'exists:App\Parking,id'
+            ],
+            'vehicle_id' => [
+                'required',
+                'exists:App\Vehicle,id',
+                Rule::unique('rents')->where(function($query) use ($vehicleId) {
+                    return $query->where('vehicle_id', $vehicleId)
+                        ->whereNull('end_time');
+                })
+            ]
+        ], [
+            'parking_id.required' => 'Wybierz parking!',
+            'parking_id.exists' => 'Parking nie istnieje!',
+            'vehicle_id.required' => 'Wybierz pojazd!',
+            'vehicle_id.exists' => 'Pojazd nie istnieje! Dodaj najpierw pojazd!',
+            'vehicle_id.unique' => 'Ten pojazd jest już aktualnie zaparkowany!'
+        ]);
+
+        $validator->validate();
+
 
 
         $rent = new Rent();

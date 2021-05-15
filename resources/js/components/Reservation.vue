@@ -55,30 +55,44 @@ export default {
                 .catch(err => console.log(err));
         },
         deleteReservation(id) {
-            if (confirm('Czy na pewno chcesz usunąć rezerwację?')) {
+
+            showConfirmModal('Czy na pewno chcesz usunąć rezerwację?', function(param) {
                 fetch(`api/reservation/${id}`, {
                     method: 'delete'
                 })
                     .then(res => res.json())
                     .then(data => {
-                        alert('Rezerwacja usunięta!');
-                        this.fetchReservations();
+                        if(data.errors) {
+                            showErrorModal(data.errors)
+                        } else {
+                            showSuccessModal('Rezerwacja usunięta!');
+                            param.fetchReservations();
+                        }
                     })
                     .catch(err => console.log(err));
-            }
+            }, [this]);
         },
         addRentFromReservation(id) {
-            if (confirm('Czy na pewno chcesz rozpocząć parkowanie?')) {
+
+            showConfirmModal('Czy na pewno chcesz rozpocząć parkowanie?', function (param) {
                 fetch(`api/rent/from_reservation/${id}`, {
-                    method: 'post'
+                    method: 'post',
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        showSuccessModal('Parkowanie dodane!');
-                        this.fetchReservations();
+                        if(data.errors) {
+                            showErrorModal(data.errors)
+                        } else {
+                            showSuccessModal('Parkowanie dodane!');
+                            param.fetchReservations();
+                        }
                     })
                     .catch(err => console.log(err));
-            }
+            }, [this]);
         },
     }
 }
