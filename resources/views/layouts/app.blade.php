@@ -47,6 +47,18 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal" id="prompt-modal" tabindex="-1" role="dialog" aria-labelledby="info-modal-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal" role="document">
+                    <div class="modal-content">
+                        <div id="prompt-modal-body" class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Anuluj</button>
+                            <button id="prompt-modal-ok-btn" type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

@@ -6,6 +6,8 @@ use App\Parking;
 use App\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Resources\Reservation as ReservationResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ReservationController extends Controller
 {
@@ -38,6 +40,25 @@ class ReservationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'registration_number' => [
+                'required',
+                'max:10',
+            ],
+            'parking_id' => [
+                'required',
+                'exists:App\Parking,id'
+            ],
+        ], [
+            'registration_number.required' => 'Nr rejestracyjny jest wymagany!',
+            'registration_number.max' => 'Numer rejestracyjny może mieć maks. 10 znaków!',
+            'parking_id.required' => 'Wybierz parking!',
+            'parking_id.exists' => 'Parking nie istnieje!'
+        ]);
+
+        $validator->validate();
+
 
         $reservation = new Reservation();
 

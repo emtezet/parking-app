@@ -101,25 +101,31 @@ export default {
             },[this])
         },
         makeReservation(parking_id) {
-            let registrationNumber = prompt('Podaj tablicę rejestracyjną:');
+            //let registrationNumber = prompt('Podaj tablicę rejestracyjną:');
 
-            fetch('api/reservation', {
-                method: 'post',
-                body: JSON.stringify({
-                    parking_id: parking_id,
-                    registration_number: registrationNumber
-                }),
-                headers: {
-                    'content-type': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    alert('Rezerwacja przyjęta! Ważna do: ' + data);
-                    this.fetchParkings();
+            showPromptModal('Podaj tablicę rejestracyjną:', function(param) {
+                fetch('api/reservation', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        parking_id: parking_id,
+                        registration_number: jQuery('#prompt-input').val()
+                    }),
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
                 })
-                .catch(err => console.log(err));
-
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            showSuccessModal('Rezerwacja przyjęta! Ważna do: ' + data);
+                            param.fetchParkings();
+                        }
+                    })
+                    .catch(err => console.log(err));
+            },[this]);
         },
         editParking(parking) {
             this.edit = true;

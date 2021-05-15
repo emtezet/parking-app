@@ -293,3 +293,29 @@ window.showConfirmModal = function (confirmMessage, yesCallbackFunction, params)
 
     $('#confirm-modal').modal('show');
 };
+
+//Prompt Modal
+window.showPromptModal = function (promptMessage, okCallbackFunction, params, defaultValue = false) {
+    $("#prompt-modal-body").empty().append(
+        '<div class="form-group" role="alert">' +
+        '<label for="prompt-input" class="col-form-label">' + decodeURIComponent(promptMessage) + '</label>' +
+        '<input type="text" class="form-control" id="prompt-input" value=""/>' +
+        '</div>'
+    );
+    $("#prompt-modal-ok-btn").unbind("click").click(function () {
+        okCallbackFunction.apply(this, params);
+    });
+
+    $('#prompt-input').keypress(function (e) {
+        let keyCode = (event.keyCode ? event.keyCode : event.which);
+        if (keyCode === 13) {
+            $("#prompt-modal-ok-btn").trigger('click');
+            return false;
+        }
+    });
+
+
+    $('#prompt-modal').modal('show');
+
+    $('#prompt-modal-body input').focus().val(defaultValue !== false ? decodeURIComponent(defaultValue) : '');
+};
