@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\VehicleType as VehicleTypeResource;
 use App\VehicleType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class VehicleTypeController extends Controller
 {
@@ -35,6 +36,14 @@ class VehicleTypeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+
+        Validator::make($request->all(), [
+            'name' => 'required|max:20|unique:App\VehicleType,name'
+        ], [
+            'name.required' => 'Nazwa typu pojazdu jest wymagana!',
+            'name.max' => 'Nazwa typu pojazdu nie może być dłuższa niż 20 znaków!'
+        ])->validate();
+
         $vehicleType = $request->isMethod('put') ? VehicleType::findOrFail($request->vehicle_type_id) : new VehicleType();
 
         $vehicleType->id = $request->input('vehicle_type_id');

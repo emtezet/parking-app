@@ -63,18 +63,20 @@ export default {
                 .catch(err => console.log(err));
         },
         deleteVehicleType(id) {
-            if (confirm('Czy na pewno chcesz usunąć ten typ pojazdu?')) {
+
+            showConfirmModal('Czy na pewno chcesz usunąć ten typ pojazdu?', function(param) {
                 fetch(`api/vehicle_type/${id}`, {
                     method: 'delete'
                 })
                     .then(res => res.json())
                     .then(data => {
-                        alert('Typ pojazdu usunięty!');
-                        this.clearForm();
-                        this.fetchVehicleTypes();
+                        showSuccessModal('Typ pojazdu usunięty!');
+                        param.clearForm();
+                        param.fetchVehicleTypes();
                     })
                     .catch(err => console.log(err));
-            }
+            }, [this]);
+
         },
         editVehicleType(vehicle_type) {
             this.edit = true;
@@ -89,14 +91,19 @@ export default {
                     method: 'post',
                     body: JSON.stringify(this.vehicle_type),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Typ pojazdu dodany!');
-                        this.fetchVehicleTypes();
+                        if(data.errors) {
+                            showErrorModal(data.errors)
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Typ pojazdu dodany!');
+                            this.fetchVehicleTypes();
+                        }
                     })
                     .catch(err => console.log(err));
             } else {
@@ -105,14 +112,19 @@ export default {
                     method: 'put',
                     body: JSON.stringify(this.vehicle_type),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Typ pojazdu poprawnie wyedytowany!');
-                        this.fetchVehicleTypes();
+                        if(data.errors) {
+                            showErrorModal(data.errors)
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Typ pojazdu poprawnie wyedytowany!');
+                            this.fetchVehicleTypes();
+                        }
                     })
                     .catch(err => console.log(err));
             }
