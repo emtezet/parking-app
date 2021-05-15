@@ -171,10 +171,10 @@ class RentController extends Controller
     public function createFromReservation($id) {
 
         $reservation = Reservation::findOrFail($id);
-        $parkingId = $reservation ? $reservation->parking_id : '';
+        $parkingId = $reservation ? $reservation->parking_id : 0;
 
         $vehicle = Vehicle::where('registration_number', $reservation->registration_number)->first();
-        $vehicleId = $vehicle ? $vehicle->id : '';
+        $vehicleId = $vehicle ? $vehicle->id : 0;
 
 
         $validator = Validator::make([
@@ -186,8 +186,8 @@ class RentController extends Controller
                 'exists:App\Parking,id'
             ],
             'vehicle_id' => [
-                'required',
                 'exists:App\Vehicle,id',
+                'required',
                 Rule::unique('rents')->where(function($query) use ($vehicleId) {
                     return $query->where('vehicle_id', $vehicleId)
                         ->whereNull('end_time');

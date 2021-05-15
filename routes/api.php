@@ -143,6 +143,24 @@ Route::delete('/rent/{id}', 'RentController@destroy');
 //Create from Reservation
 Route::post('/rent/from_reservation/{id}', 'RentController@createFromReservation');
 
-//Report
+////////////////////
+//Employee Controller //
+////////////////////
+
+//List
+Route::get('/employees', 'EmployeeController@index');
+
+//Create
+Route::post('/employee', 'EmployeeController@store');
+
+//Update
+Route::put('/employee', 'EmployeeController@store');
+
+//Delete
+Route::delete('/employee/{id}', 'EmployeeController@destroy');
+
+///////////
+//Reports//
+///////////
 Route::post('/rent/get_report/', 'RentController@getReport');
 Route::post('/rent/get_report_csv/', 'RentController@getReportCSV');

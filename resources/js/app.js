@@ -52,6 +52,7 @@ import Vehicle from "./components/Vehicle";
 import PriceList from "./components/PriceList";
 import Rent from "./components/Rent";
 import Report from "./components/Report";
+import Employee from "./components/Employee";
 
 const router = new VueRouter({
     mode: 'history',
@@ -132,6 +133,16 @@ const router = new VueRouter({
             name: 'report',
             path: '/report',
             component: Report,
+            meta: {
+                requiresAuth: true,
+                requiresRole: ['admin']
+            }
+        },
+        //Employee
+        {
+            name: 'employee',
+            path: '/employee',
+            component: Employee,
             meta: {
                 requiresAuth: true,
                 requiresRole: ['admin']
