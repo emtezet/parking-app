@@ -43,14 +43,18 @@ class VehicleController extends Controller
             'registration_number' => [
                 'required',
                 'max:10',
-                Rule::unique('vehicles')->ignore($request->vehicle_id)
+                Rule::unique('vehicles')->ignore($request->vehicle_id),
             ],
-            'vehicle_type_id' => 'required',
+            'vehicle_type_id' => [
+                'required',
+                'exists:App\VehicleType,id'
+            ],
         ], [
             'registration_number.required' => 'Nr rejestracyjny jest wymagany!',
             'registration_number.unique' => 'Pojazd o tym numerze rejestracyjnym już istnieje!',
             'registration_number.max' => 'Numer rejestracyjny może mieć maks. 10 znaków!',
-            'vehicle_type_id.required' => 'Wybierz typ pojazdu!'
+            'vehicle_type_id.required' => 'Wybierz typ pojazdu!',
+            'vehicle_type_id.exists' => 'Wybrany typ pojazdu nie istnieje!'
         ]);
 
         $validator->validate();

@@ -127,18 +127,19 @@ export default {
                 .catch(err => console.log(err));
         },
         deletePriceList(id) {
-            if (confirm('Czy na pewno chcesz usunąć ten cennik?')) {
+
+            showConfirmModal('Czy na pewno chcesz usunąć ten cennik?', function(param) {
                 fetch(`api/price_list/${id}`, {
                     method: 'delete'
                 })
                     .then(res => res.json())
                     .then(data => {
-                        alert('Cennik usunięty!');
-                        this.clearForm();
-                        this.fetchPriceLists();
+                        showSuccessModal('Cennik usunięty!');
+                        param.clearForm();
+                        param.fetchPriceLists();
                     })
                     .catch(err => console.log(err));
-            }
+            }, [this]);
         },
         editPriceList(price_list) {
             this.edit = true;
@@ -155,14 +156,19 @@ export default {
                     method: 'post',
                     body: JSON.stringify(this.price_list),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Cennik dodany!');
-                        this.fetchPriceLists();
+                        if(data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Cennik dodany!');
+                            this.fetchPriceLists();
+                        }
                     })
                     .catch(err => console.log(err));
             } else {
@@ -171,14 +177,19 @@ export default {
                     method: 'put',
                     body: JSON.stringify(this.price_list),
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
                     .then(res => res.json())
                     .then(data => {
-                        this.clearForm();
-                        alert('Cennik poprawnie wyedytowany!');
-                        this.fetchPriceLists();
+                        if(data.errors) {
+                            showErrorModal(data.errors);
+                        } else {
+                            this.clearForm();
+                            showSuccessModal('Cennik poprawnie wyedytowany!');
+                            this.fetchPriceLists();
+                        }
                     })
                     .catch(err => console.log(err));
             }
