@@ -39,7 +39,8 @@ export default {
                     this.$router.push({name: 'homepage'})
                 })
                 .catch(err => {
-                    alert(err.response.data.message)
+                    showErrorModal(err.response.data.errors);
+                    //alert(err.response.data.message)
                 })
         }
     }

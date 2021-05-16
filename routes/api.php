@@ -4,6 +4,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,17 +22,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', function (Request $request) {
-    $data = $request->validate([
+
+    $request->validate([
         'email' => 'required|email',
         'password' => 'required'
+    ], [
+        'email.required' => 'Wypełnij pole email!',
+        'email.email' => 'Email ma niepoprawny format!',
+        'password.required' => 'Wypełnij pole hasło!'
     ]);
 
     $user = User::where('email', $request->email)->first();
 
     if (!$user || !Hash::check($request->password, $user->password)) {
-        return response([
-            'message' => ['Niepoprawne dane logowania']
-        ], 404);
+        return response()->json([
+            'errors' => [
+                'custom_errors' => ['Niepoprawne dane logowania']
+            ]
+        ], 422);
     }
 
     $token = $user->createToken('my-app-token')->plainTextToken;
