@@ -83,6 +83,7 @@ export default {
             this.vehicle_type.id = vehicle_type.id;
             this.vehicle_type.vehicle_type_id = vehicle_type.id;
             this.vehicle_type.name = vehicle_type.name;
+            jQuery("html, body").animate({ scrollTop: 0 }, "slow");
         },
         addVehicleType() {
             if (this.edit === false) {

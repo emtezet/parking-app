@@ -148,6 +148,7 @@ export default {
             this.price_list.price_per_hour = price_list.price_per_hour;
             this.price_list.vehicle_type_id = price_list.vehicle_type_id;
             this.price_list.parking_id = price_list.parking_id;
+            jQuery("html, body").animate({ scrollTop: 0 }, "slow");
         },
         addPriceList() {
             if (this.edit === false) {

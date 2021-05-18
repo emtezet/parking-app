@@ -134,6 +134,7 @@ export default {
             this.parking.name = parking.name;
             this.parking.address = parking.address;
             this.parking.places_amount = parking.places_amount;
+            jQuery("html, body").animate({ scrollTop: 0 }, "slow");
         },
         addParking() {
             if (this.edit === false) {

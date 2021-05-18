@@ -133,6 +133,7 @@ export default {
             this.vehicle.vehicle_id = vehicle.id;
             this.vehicle.registration_number = vehicle.registration_number;
             this.vehicle.vehicle_type_id = vehicle.vehicle_type_id;
+            $("html, body").animate({ scrollTop: 0 }, "slow");
         },
         addVehicle() {
             if (this.edit === false) {

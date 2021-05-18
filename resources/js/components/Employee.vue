@@ -102,6 +102,7 @@ export default {
             this.employee.name = employee.name;
             this.employee.email = employee.email;
             this.employee.role = employee.role;
+            jQuery("html, body").animate({ scrollTop: 0 }, "slow");
         },
         addEmployee() {
             if (this.edit === false) {
